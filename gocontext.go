@@ -8,6 +8,7 @@ var activeSpanKey = contextKey{}
 
 // ContextWithSpan returns a new `context.Context` that holds a reference to
 // `span`'s SpanContext.
+// 将span写到context
 func ContextWithSpan(ctx context.Context, span Span) context.Context {
 	return context.WithValue(ctx, activeSpanKey, span)
 }
@@ -18,6 +19,7 @@ func ContextWithSpan(ctx context.Context, span Span) context.Context {
 // NOTE: context.Context != SpanContext: the former is Go's intra-process
 // context propagation mechanism, and the latter houses OpenTracing's per-Span
 // identity and baggage information.
+// 从context里面读取span
 func SpanFromContext(ctx context.Context) Span {
 	val := ctx.Value(activeSpanKey)
 	if sp, ok := val.(Span); ok {
@@ -40,12 +42,14 @@ func SpanFromContext(ctx context.Context) Span {
 //        defer sp.Finish()
 //        ...
 //    }
+// opts强制指定从属关系【一般不用指定】，强制指定开始时间和强制设置tags【一般不用指定】
 func StartSpanFromContext(ctx context.Context, operationName string, opts ...StartSpanOption) (Span, context.Context) {
 	return startSpanFromContextWithTracer(ctx, GlobalTracer(), operationName, opts...)
 }
 
 // startSpanFromContextWithTracer is factored out for testing purposes.
 func startSpanFromContextWithTracer(ctx context.Context, tracer Tracer, operationName string, opts ...StartSpanOption) (Span, context.Context) {
+	//默认使用孩从模式
 	if parentSpan := SpanFromContext(ctx); parentSpan != nil {
 		opts = append(opts, ChildOf(parentSpan.Context()))
 	}

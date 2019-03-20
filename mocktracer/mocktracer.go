@@ -67,6 +67,7 @@ func (t *MockTracer) StartSpan(operationName string, opts ...opentracing.StartSp
 }
 
 // RegisterInjector registers injector for given format
+// 自定义的rpc协议需要注册
 func (t *MockTracer) RegisterInjector(format interface{}, injector Injector) {
 	t.injectors[format] = injector
 }

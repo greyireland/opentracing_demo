@@ -18,6 +18,7 @@ import (
 //
 // By default all spans have Sampled=true flag, unless {"sampling.priority": 0}
 // tag is set.
+//包含4个属性：t_id,s_id,sflag,baggage
 type MockSpanContext struct {
 	TraceID int
 	SpanID  int

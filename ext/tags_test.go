@@ -26,6 +26,7 @@ func TestPeerTags(t *testing.T) {
 	ext.SpanKind.Set(span, ext.SpanKindRPCServerEnum)
 	ext.SpanKindRPCClient.Set(span)
 	span.Finish()
+	ext.SpanKind.Set(span,ext.SpanKindRPCServerEnum)
 
 	rawSpan := tracer.FinishedSpans()[0]
 	assert.Equal(t, map[string]interface{}{
